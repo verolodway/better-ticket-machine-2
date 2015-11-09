@@ -17,16 +17,24 @@ public class TicketMachine
     private int balance;
     // The total amount of money collected by this machine.
     private int total;
+    // Cantidad de dinero que se descuenta del billete.
+    private int moneyDiscount;
+    // Porcentaje de descuento del billete.
+    private boolean discount;
 
     /**
      * Create a machine that issues tickets of the given price.
      */
-    public TicketMachine(int cost)
-    {
+    public TicketMachine(int cost, boolean descuento, int porcentaje)
+    {   
         price = cost;
+        discount = descuento;
+        moneyDiscount = porcentaje;
         balance = 0;
         total = 0;
     }
+   
+    
 
     /**
      * @Return The price of a ticket.
@@ -103,10 +111,41 @@ public class TicketMachine
 
     public int emptyMachine()
     {
-        int totalMoney;
-        totalMoney = total;
+        if (balance == 0) {
+        int recaudacion = total;
         total = 0;
-        return totalMoney;
-}
+        return recaudacion; 
+        }
+        else {
+            return -1;
+        }
+    }
+    public void printTicketWithDiscount()
+    { 
+        int precioDesc = price - ((price * moneyDiscount)/100);
+        if (discount == true && balance >= precioDesc)
+        {
+            System.out.println("##################");
+            System.out.println("# The BlueJ Line");
+            System.out.println("# Ticket");
+            System.out.println("# " + precioDesc + " cents.");
+            System.out.println("##################");
+            System.out.println();
+
+            // Update the total collected with the price.
+            total = total + precioDesc;
+            // Reduce the balance by the prince.
+            balance = balance - precioDesc;
+        }    
+        else if (discount == true)
+        {
+            int amountLeftToPay = precioDesc - balance;
+            System.out.println("You must insert at least: " + amountLeftToPay + "more cents.");
+        }
+        else
+        {
+            System.out.println("No hay descuento activo");
+        }    
+    }
 }
 
